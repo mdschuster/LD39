@@ -6,6 +6,7 @@ public class Player : MonoBehaviour {
 
 	int xpos;
 	int ypos;
+	string facing;
 
 	Tile myTile;
 
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour {
 	void Update () {
 
 		move ();
+		rotateMirror ();
 	}
 
 	public void init(){
@@ -40,7 +42,7 @@ public class Player : MonoBehaviour {
 	}
 
 	void move(){
-
+		string direction = " ";
 
 		if (myTile == null) {
 			return;
@@ -54,31 +56,40 @@ public class Player : MonoBehaviour {
 		if (Input.GetKeyDown (KeyCode.W)) {
 
 			newTile = manager.getNeighbor (myTile, "up");
+			direction = "up";
+			facing = direction;
 
 		} else if (Input.GetKeyDown (KeyCode.S)) {
 
 			newTile = manager.getNeighbor (myTile, "down");
+			direction = "down";
+			facing = direction;
 
 		} else if (Input.GetKeyDown (KeyCode.A)) {
 
 			newTile = manager.getNeighbor (myTile, "left");
+			direction = "left";
+			facing = direction;
 
 		} else if (Input.GetKeyDown (KeyCode.D)) {
 
 			newTile = manager.getNeighbor (myTile, "right");
+			direction = "right";
+			facing = direction;
 
 		} else {
 			newTile = null;
+			direction = " ";
 		}
 
 		if ( newTile != null ) {
-			movePlayer();
+			movePlayer(direction);
 			time=inputCooldown;
 		}
 
 	}
 
-	void movePlayer(){
+	void movePlayer(string direction){
 
 		//check what is in the tile
 
@@ -88,6 +99,10 @@ public class Player : MonoBehaviour {
 		}
 		if (obj == "mirror") {
 			//move the mirror too if you can
+			int moved = newTile.getGO().GetComponent<Mirror>().moveMirror(direction);
+			if (moved == 0) {
+				return;
+			}
 		}
 		if (obj == "pickup") {
 			//do something with the pickup
@@ -119,6 +134,28 @@ public class Player : MonoBehaviour {
 		}
 
 		transform.position = newPos;
+	}
+
+	void rotateMirror(){
+		if (myTile == null) {
+			return;
+		}
+
+
+		if (Input.GetKeyDown (KeyCode.R)) {
+			string[] allDirs = new string[4];
+			allDirs [0] = "up";
+			allDirs [1] = "right";
+			allDirs [2] = "down";
+			allDirs [3] = "left";
+			for (int i = 0; i < 4; i++) {
+				Tile facingTile = manager.getNeighbor (myTile,allDirs[i]);
+				if (facingTile.getObject() == "mirror") {
+					facingTile.getGO ().GetComponent<Mirror> ().rotate ();
+				}
+			}
+
+		}
 	}
 
 	void setupPlayer(){

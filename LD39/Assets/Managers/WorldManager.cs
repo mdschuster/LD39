@@ -10,10 +10,12 @@ public class WorldManager : MonoBehaviour {
 
 	public GameObject floorPrefab;
 	public GameObject playerPrefab;
+	public GameObject mirrorPrefab;
 
 	public Sprite wall;
 
 	GameObject player;
+	GameObject mirror;
 
 	// Use this for initialization
 	void Start () {
@@ -22,6 +24,7 @@ public class WorldManager : MonoBehaviour {
 		defineGrid ();
 		displayBoard ();
 		displayPlayer ();
+		displayMirrors ();
 		setupCamera ();
 
 	}
@@ -64,6 +67,12 @@ public class WorldManager : MonoBehaviour {
 	void displayPlayer(){
 		player = (GameObject)Instantiate (playerPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
 		player.GetComponent<Player>().init ();
+	}
+
+	void displayMirrors(){
+		mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
+		mirror.GetComponent<Mirror> ().init (Grid [2, 2]);
+		Grid [2, 2].changeObject ("mirror",mirror);
 	}
 
 	public Tile getTile(int x, int y){

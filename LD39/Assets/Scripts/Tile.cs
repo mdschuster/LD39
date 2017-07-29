@@ -29,6 +29,10 @@ public class Tile{
 		return this.goObject;
 	}
 
+	public void changeGO(GameObject go){
+		goObject = go;
+	}
+
 	public int Xpos {
 		get {
 			return xpos;
