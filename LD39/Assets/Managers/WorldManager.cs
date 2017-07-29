@@ -17,6 +17,7 @@ public class WorldManager : MonoBehaviour {
 	GameObject player;
 	GameObject mirror;
 	Maps maps;
+	public LaserManager laserManager;
 	char[] level;
 
 	// Use this for initialization
@@ -29,6 +30,7 @@ public class WorldManager : MonoBehaviour {
 		displayPlayer ();
 		displayMirrors ();
 		setupCamera ();
+		setupLaserManager ();
 
 	}
 	
@@ -41,7 +43,6 @@ public class WorldManager : MonoBehaviour {
 		
 		maps = Camera.main.GetComponent<Maps> ();
 		string slvl = maps.loadLevel ();
-		Debug.Log (slvl);
 		level = slvl.ToCharArray();
 	}
 
@@ -88,11 +89,9 @@ public class WorldManager : MonoBehaviour {
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
 				idx = j+i*mapSize;
-				//Debug.Log (i + " " + j + " " + idx + " " + level [idx]);
 				if (level [idx] == 'P') {
 					player = (GameObject)Instantiate (playerPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
 					player.GetComponent<Player>().init (Grid[i,j]);
-					//Debug.Log (i + " " + j);
 					return;
 				}
 			}
@@ -105,7 +104,6 @@ public class WorldManager : MonoBehaviour {
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
 				idx = j + i * mapSize;
-				//Debug.Log (i + " " + j + " " + idx + " " + level [idx]);
 				if (level [idx] == 'M') {
 					mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
 					mirror.GetComponent<Mirror> ().init (Grid [i, j]);
@@ -150,5 +148,11 @@ public class WorldManager : MonoBehaviour {
 
 		return neighbor;
 
+	}
+
+	void setupLaserManager(){
+		laserManager = GameObject.FindGameObjectWithTag ("laserManager").GetComponent<LaserManager> ();
+		laserManager.init ();
+		laserManager.redrawLasers ();
 	}
 }

@@ -12,8 +12,6 @@ public class Player : MonoBehaviour {
 	//i'd rather not have this here, but it works for now
 	//FIXME
 	Tile newTile;
-	Vector3 moveTo;
-	float tol = 0.0001f;
 	float inputCooldown = 0.1f;
 	float time=-1;
 
@@ -112,7 +110,6 @@ public class Player : MonoBehaviour {
 		newPos.y = newTile.Ypos;
 		newPos.z = origPos.z;
 		this.myTile = newTile;
-		moveTo = newPos;
 
 
 		StartCoroutine(moveMe(origPos, newPos));
@@ -161,7 +158,6 @@ public class Player : MonoBehaviour {
 		transform.position = pos;
 		myTile = manager.getTile (xpos, ypos);
 		newTile = myTile;
-		moveTo = pos;
 	}
 
 

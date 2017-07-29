@@ -86,7 +86,9 @@
 -define:UNITY_EDITOR_WIN
 -define:ENABLE_NATIVE_ARRAY_CHECKS
 -define:UNITY_TEAM_LICENSE
+Assets/Managers/LaserManager.cs
 Assets/Managers/WorldManager.cs
+Assets/Scripts/Laser.cs
 Assets/Scripts/Maps.cs
 Assets/Scripts/Mirror.cs
 Assets/Scripts/Player.cs

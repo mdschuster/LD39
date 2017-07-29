@@ -8,9 +8,12 @@ public class Mirror : MonoBehaviour {
 
 	WorldManager manager;
 
+	public int orientation;
+
 	// Use this for initialization
 	void Start () {
 		manager = Camera.main.GetComponent<WorldManager> ();
+
 
 	}
 	
@@ -26,6 +29,7 @@ public class Mirror : MonoBehaviour {
 		pos.x = myTile.Xpos;
 		pos.y = myTile.Ypos;
 		transform.position = pos;
+		orientation = 1;
 	}
 
 	public void rotate(){
@@ -63,7 +67,7 @@ public class Mirror : MonoBehaviour {
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
-
+		manager.laserManager.redrawLasers ();
 		transform.position = newPos;
 	}
 
@@ -75,13 +79,18 @@ public class Mirror : MonoBehaviour {
 		Vector3 rot = new Vector3(0,0,0);
 		rot.z = newRot.eulerAngles.z+rotation;
 		newRot.eulerAngles = rot;
+		if (orientation == 1) {
+			orientation = 0;
+		} else {
+			orientation = 1;
+		}
 
 		while (elapsedTime < time) {
 			transform.rotation = Quaternion.Lerp (origRot, newRot, elapsedTime / time);
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
-
+		manager.laserManager.redrawLasers ();
 		transform.rotation = newRot;
 	}
 }
