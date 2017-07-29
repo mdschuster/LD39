@@ -8,18 +8,25 @@ public class Tile{
 	int ypos;
 
 	string theObject = "none";
+	GameObject goObject;
 
 	public Tile(int x, int y){
 		this.xpos = x;
 		this.ypos = y;
+		goObject = null;
 	}
 
-	public void changeObject(string newObject){
+	public void changeObject(string newObject, GameObject go){
 		this.theObject = newObject;
+		this.goObject = go;
 	}
 
 	public string getObject(){
 		return this.theObject;
+	}
+
+	public GameObject getGO(){
+		return this.goObject;
 	}
 
 	public int Xpos {

@@ -11,6 +11,8 @@ public class WorldManager : MonoBehaviour {
 	public GameObject floorPrefab;
 	public GameObject playerPrefab;
 
+	public Sprite wall;
+
 	GameObject player;
 
 	// Use this for initialization
@@ -20,12 +22,19 @@ public class WorldManager : MonoBehaviour {
 		defineGrid ();
 		displayBoard ();
 		displayPlayer ();
+		setupCamera ();
 
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
+	}
+
+	void setupCamera (){
+		Vector3 pos = new Vector3 (mapSize / 2, mapSize / 2, -10);
+		Camera.main.transform.position = pos;
+		Camera.main.orthographicSize = 5.6f;
 	}
 
 
@@ -35,7 +44,7 @@ public class WorldManager : MonoBehaviour {
 				Grid[i,j] = new Tile(i,j);
 				//add wall boundry
 				if (i == mapSize-1 || j == mapSize-1  || i==0 ||j==0) {
-					Grid [i, j].changeObject ("wall");
+					Grid [i, j].changeObject ("wall", null);
 				}
 			}
 		}
@@ -45,6 +54,9 @@ public class WorldManager : MonoBehaviour {
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
 				goGrid [i, j] = (GameObject)Instantiate (floorPrefab, new Vector3 (i,j,0), Quaternion.identity);
+				if (Grid [i, j].getObject () == "wall") {
+					goGrid [i, j].GetComponent<SpriteRenderer> ().sprite = wall;
+				}
 			}
 		}
 	}

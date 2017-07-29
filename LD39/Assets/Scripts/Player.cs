@@ -83,7 +83,6 @@ public class Player : MonoBehaviour {
 		//check what is in the tile
 
 		string obj = newTile.getObject ();
-		Debug.Log (obj);
 		if (obj == "wall") {
 			return;
 		}
