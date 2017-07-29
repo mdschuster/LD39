@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class LaserManager : MonoBehaviour {
 
-	GameObject allLasers;
 	WorldManager manager;
 	public GameObject laserPrefab;
 	int generators;
-	int gX=2;
-	int gY=0;
-	string gface = "right";
+	int gX;
+	int gY;
 	Tile genTile;
 	// Use this for initialization
 	void Start () {
@@ -24,9 +22,8 @@ public class LaserManager : MonoBehaviour {
 
 	public void init(){
 		manager = Camera.main.GetComponent<WorldManager> ();
-		allLasers = gameObject;
 		generators = 1;
-		genTile = manager.getTile (gX, gY);
+		genTile = manager.GenRed.GetComponent<Generator> ().myTile;
 	}
 
 	public void redrawLasers(){
@@ -36,8 +33,7 @@ public class LaserManager : MonoBehaviour {
 		Tile curTile = genTile;
 		Tile nextTile;
 		GameObject laser;
-		string laserFace = gface;
-		float offset = 0.5f;
+		string laserFace = manager.GenRed.GetComponent<Generator> ().orientation;
 		for (int i = 0; i < generators; i++) {
 			while (!stopped) {
 
@@ -47,14 +43,13 @@ public class LaserManager : MonoBehaviour {
 				nextTile = manager.getNeighbor (curTile, laserFace);
 				//Debug.Log(nextTile.getObject ());
 				//Debug.Log (nextTile.Xpos + " " + nextTile.Ypos);
-				if (nextTile.getObject() == "wall") {
+				if (nextTile.getObject() == "wall" || nextTile.getObject() == "goal" || nextTile.getObject() == "generator") {
 					break;
 				}
 				if (nextTile.getObject () == "mirror") {
 					//check the mirror orientation
 					GameObject mirror = nextTile.getGO();
 					if (mirror.GetComponent<Mirror> ().orientation == 1) {
-						Debug.Log (laserFace + " before");
 						if (laserFace == "up") {
 							laserFace = "right";
 						} else if (laserFace == "down") {

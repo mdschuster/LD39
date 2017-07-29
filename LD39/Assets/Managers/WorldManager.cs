@@ -11,11 +11,15 @@ public class WorldManager : MonoBehaviour {
 	public GameObject floorPrefab;
 	public GameObject playerPrefab;
 	public GameObject mirrorPrefab;
+	public GameObject goalRedPrefab;
+	public GameObject genRedPrefab;
 
 	public Sprite wall;
 
 	GameObject player;
 	GameObject mirror;
+	GameObject goalRed;
+	GameObject genRed;
 	Maps maps;
 	public LaserManager laserManager;
 	char[] level;
@@ -27,8 +31,10 @@ public class WorldManager : MonoBehaviour {
 		loadLevel ();
 		defineGrid ();
 		displayBoard ();
+		displayOther ();
 		displayPlayer ();
 		displayMirrors ();
+
 		setupCamera ();
 		setupLaserManager ();
 
@@ -36,7 +42,8 @@ public class WorldManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Input.GetKey ("escape"))
+			Application.Quit ();
 	}
 
 	void loadLevel(){
@@ -64,7 +71,7 @@ public class WorldManager : MonoBehaviour {
 				Grid[i,j] = new Tile(i,j);
 				//add wall boundry
 				idx = j+i*mapSize;
-				if (level [idx] == 'W') {
+				if (level [idx] == 'W' || level [idx] == 'G') {
 					Grid [i, j].changeObject ("wall", null);
 				} else {
 					Grid [i, j].changeObject ("none", null);
@@ -113,6 +120,46 @@ public class WorldManager : MonoBehaviour {
 		}
 	}
 
+	void displayOther(){
+		int idx;
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				idx = j + i * mapSize;
+				if (level [idx] == 'G') {
+					goalRed = (GameObject)Instantiate (goalRedPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
+					//mirror.GetComponent<Mirror> ().init (Grid [i, j]);
+					Vector3 pos = new Vector3(0,0,-1);
+					pos.x = Grid [i, j].Xpos;
+					pos.y = Grid [i, j].Ypos;
+					goalRed.transform.position = pos;
+
+					Grid [i, j].changeObject ("goal", goalRed);
+				}
+				//generator        //up                  //right              //down              //left
+				if (level [idx] == '1' || level [idx] == '2' || level [idx] == '3' || level [idx] == '4' ) {
+					genRed = (GameObject)Instantiate (genRedPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
+					//mirror.GetComponent<Mirror> ().init (Grid [i, j]);
+					Vector3 pos = new Vector3(0,0,-1);
+					pos.x = Grid [i, j].Xpos;
+					pos.y = Grid [i, j].Ypos;
+					genRed.transform.position = pos;
+
+					Grid [i, j].changeObject ("generator", genRed);
+
+					if(level[idx]=='1'){
+						genRed.GetComponent<Generator>().init(Grid[i,j],"up");
+					} else if(level[idx]=='2'){
+						genRed.GetComponent<Generator>().init(Grid[i,j],"right");
+					} else if(level[idx]=='3'){
+						genRed.GetComponent<Generator>().init(Grid[i,j],"down");
+					} else if(level[idx]=='4'){
+						genRed.GetComponent<Generator>().init(Grid[i,j],"left");
+					}
+				}
+			}
+		}
+	}
+
 	public Tile getTile(int x, int y){
 		if (Grid [x, y] == null) {
 			Debug.LogError ("Return value of getTile is null");
@@ -154,5 +201,14 @@ public class WorldManager : MonoBehaviour {
 		laserManager = GameObject.FindGameObjectWithTag ("laserManager").GetComponent<LaserManager> ();
 		laserManager.init ();
 		laserManager.redrawLasers ();
+	}
+
+	public GameObject GenRed {
+		get {
+			return genRed;
+		}
+		set {
+			genRed = value;
+		}
 	}
 }

@@ -51,22 +51,22 @@ public class Player : MonoBehaviour {
 			return;
 		}
 
-		if (Input.GetKeyDown (KeyCode.W)) {
+		if (Input.GetKey (KeyCode.W)) {
 
 			newTile = manager.getNeighbor (myTile, "up");
 			direction = "up";
 
-		} else if (Input.GetKeyDown (KeyCode.S)) {
+		} else if (Input.GetKey (KeyCode.S)) {
 
 			newTile = manager.getNeighbor (myTile, "down");
 			direction = "down";
 
-		} else if (Input.GetKeyDown (KeyCode.A)) {
+		} else if (Input.GetKey (KeyCode.A)) {
 
 			newTile = manager.getNeighbor (myTile, "left");
 			direction = "left";
 
-		} else if (Input.GetKeyDown (KeyCode.D)) {
+		} else if (Input.GetKey (KeyCode.D)) {
 
 			newTile = manager.getNeighbor (myTile, "right");
 			direction = "right";
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour {
 		//check what is in the tile
 
 		string obj = newTile.getObject ();
-		if (obj == "wall") {
+		if (obj == "wall" || obj == "goal" || obj == "generator") {
 			return;
 		}
 		if (obj == "mirror") {

@@ -8,11 +8,11 @@ public class Maps : MonoBehaviour {
 	[System.NonSerialized]  //stupid, must be this wey, otherwise you have to change in inspector
 	public string level1 = "WWWWWWWWWW" +
 						   "W........W" +
-						   "W.....M..W" +
+						   "2.....M..W" +
 					       "W........W" +
 					       "WWW......W" +
 					       "WWW......W" +
-					       "W.....M..W" +
+					       "G.....M..W" +
 					       "WWWWW....W" +
 					       "WW..P....W" +
 					       "WWWWWWWWWW";
