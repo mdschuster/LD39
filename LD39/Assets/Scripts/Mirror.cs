@@ -34,7 +34,6 @@ public class Mirror : MonoBehaviour {
 	}
 
 	public int moveMirror(string direction){
-		int returnVal = 1;
 		Tile neighbor = manager.getNeighbor (myTile, direction);
 		if (neighbor.getObject() != "none") {
 			return 0;
@@ -69,7 +68,6 @@ public class Mirror : MonoBehaviour {
 	}
 
 	IEnumerator rotateMe(float rotation){
-		Debug.Log ("rotating");
 		float elapsedTime = 0;
 		float time = 0.1f;
 		Quaternion origRot = gameObject.transform.rotation;
@@ -77,7 +75,6 @@ public class Mirror : MonoBehaviour {
 		Vector3 rot = new Vector3(0,0,0);
 		rot.z = newRot.eulerAngles.z+rotation;
 		newRot.eulerAngles = rot;
-		Debug.Log (origRot + " " + newRot);
 
 		while (elapsedTime < time) {
 			transform.rotation = Quaternion.Lerp (origRot, newRot, elapsedTime / time);

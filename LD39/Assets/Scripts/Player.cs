@@ -6,7 +6,6 @@ public class Player : MonoBehaviour {
 
 	int xpos;
 	int ypos;
-	string facing;
 
 	Tile myTile;
 
@@ -32,11 +31,12 @@ public class Player : MonoBehaviour {
 		rotateMirror ();
 	}
 
-	public void init(){
+	public void init(Tile startTile){
 		manager = Camera.main.GetComponent<WorldManager> ();
 		//set player position
-		this.xpos = 5;
-		this.ypos = 5; 
+
+		this.xpos = startTile.Xpos;
+		this.ypos = startTile.Ypos; 
 
 		setupPlayer ();
 	}
@@ -57,25 +57,21 @@ public class Player : MonoBehaviour {
 
 			newTile = manager.getNeighbor (myTile, "up");
 			direction = "up";
-			facing = direction;
 
 		} else if (Input.GetKeyDown (KeyCode.S)) {
 
 			newTile = manager.getNeighbor (myTile, "down");
 			direction = "down";
-			facing = direction;
 
 		} else if (Input.GetKeyDown (KeyCode.A)) {
 
 			newTile = manager.getNeighbor (myTile, "left");
 			direction = "left";
-			facing = direction;
 
 		} else if (Input.GetKeyDown (KeyCode.D)) {
 
 			newTile = manager.getNeighbor (myTile, "right");
 			direction = "right";
-			facing = direction;
 
 		} else {
 			newTile = null;
