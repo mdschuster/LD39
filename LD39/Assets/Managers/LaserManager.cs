@@ -24,10 +24,10 @@ public class LaserManager : MonoBehaviour {
 	public void init(){
 		manager = Camera.main.GetComponent<WorldManager> ();
 		generators = 1;
-		genTile = manager.GenRed.GetComponent<Generator> ().myTile;
 	}
 
 	public void redrawLasers(){
+		genTile = manager.GenRed.GetComponent<Generator> ().myTile;
 		destroyLasers ();
 		resetLasers ();
 		goal = 0;
@@ -93,11 +93,11 @@ public class LaserManager : MonoBehaviour {
 		}
 	}
 
-	public void resetLasers(){
+	void resetLasers(){
 		manager.resetLasers ();
 	}
 
-	void destroyLasers(){
+	public void destroyLasers(){
 		int childCount = this.gameObject.transform.childCount;
 		for (int i = 0; i < childCount; i++) {
 			GameObject.Destroy(gameObject.transform.GetChild(i).gameObject);

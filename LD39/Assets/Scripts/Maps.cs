@@ -16,6 +16,18 @@ public class Maps : MonoBehaviour {
 					       "WWWWW....W" +
 					       "WW..P....W" +
 					       "WWWWWWWWWW";
+
+	[System.NonSerialized]  //stupid, must be this wey, otherwise you have to change in inspector
+	public string level2 =  "WWWWWWWWWW" +
+							"W..P.....W" +
+							"W.....M..W" +
+							"W........W" +
+							"WMW......W" +
+							"W.W......W" +
+							"W....M...W" +
+							"WGWWW....W" +
+							"W2.......W" +
+							"WWWWWWWWWW";
 	// Use this for initialization
 	void Start () {
 		
@@ -26,7 +38,13 @@ public class Maps : MonoBehaviour {
 		
 	}
 
-	public string loadLevel(){
-		return level1;
+	public string loadLevel(int lvl){
+		if (lvl == 1) {
+			return level1;
+		} else if (lvl == 2) {
+			return level2;
+		} else {
+			return level1;
+		}
 	}
 }

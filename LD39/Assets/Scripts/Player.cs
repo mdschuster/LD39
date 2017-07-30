@@ -9,6 +9,9 @@ public class Player : MonoBehaviour {
 
 	Tile myTile;
 
+	bool disableControls;
+	bool disableCheck;
+
 	//i'd rather not have this here, but it works for now
 	//FIXME
 	Tile newTile;
@@ -19,7 +22,8 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
+		disableControls = true;
+		disableCheck = false;
 	}
 
 	// Update is called once per frame
@@ -28,7 +32,10 @@ public class Player : MonoBehaviour {
 		move ();
 		rotateMirror ();
 		//this is ok for now, but i don't like it
-		checkLaser ();
+		if (disableCheck == false) {
+			//Debug.Log ("checking");
+			checkLaser ();
+		}
 	}
 
 	public void init(Tile startTile){
@@ -44,6 +51,9 @@ public class Player : MonoBehaviour {
 	void move(){
 		string direction = " ";
 
+		if (disableControls == true) {
+			return;
+		}
 		if (myTile == null) {
 			return;
 		}
@@ -115,7 +125,7 @@ public class Player : MonoBehaviour {
 
 
 		StartCoroutine(moveMe(origPos, newPos));
-		checkLaser ();
+		//checkLaser ();
 
 	}
 
@@ -150,7 +160,7 @@ public class Player : MonoBehaviour {
 					facingTile.getGO ().GetComponent<Mirror> ().rotate ();
 				}
 			}
-			checkLaser ();
+			//checkLaser ();
 
 		}
 	}
@@ -169,7 +179,25 @@ public class Player : MonoBehaviour {
 			return;
 		if (myTile.Laser == 1) {
 			manager.Dead = 1;
+			manager.Lives -= 1;
 		}
 	}
 
+	public bool DisableControls {
+		get {
+			return disableControls;
+		}
+		set {
+			disableControls = value;
+		}
+	}
+
+	public bool DisableCheck {
+		get {
+			return disableCheck;
+		}
+		set {
+			disableCheck = value;
+		}
+	}
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WorldManager : MonoBehaviour {
 
@@ -20,18 +21,28 @@ public class WorldManager : MonoBehaviour {
 	GameObject mirror;
 	GameObject goalRed;
 	GameObject genRed;
+	GameObject objects;
+	SpriteRenderer fadeScreen;
+	GameObject textCanvas;
 	Maps maps;
+	GameObject menu;
 	public LaserManager laserManager;
 	char[] level;
 	int goal = 0;
 	int dead = 0;
+	int lives=3;
+	int levelCounter = 1;
+	bool play=false;
 
 	// Use this for initialization
 	void Start () {
 		
 		//First thing to do is create grid
 		goal=0;
-		loadLevel ();
+		objects = GameObject.FindGameObjectWithTag ("objects");
+		textCanvas = GameObject.FindGameObjectWithTag ("textCanvas");
+		menu = GameObject.FindGameObjectWithTag ("mainMenu");
+		loadLevel (1);
 		defineGrid ();
 		displayBoard ();
 		displayOther ();
@@ -40,6 +51,9 @@ public class WorldManager : MonoBehaviour {
 
 		setupCamera ();
 		setupLaserManager ();
+		setupFade ();
+
+		//fadeout ();
 
 	}
 	
@@ -48,19 +62,20 @@ public class WorldManager : MonoBehaviour {
 		if (Input.GetKey ("escape"))
 			Application.Quit ();
 		if (goal == 1 && dead==0) {
-			Debug.Log ("Winner, Winner, Chicken Dinner!");
 			win ();
 		}
 		if (dead == 1) {
-			Debug.Log ("You Died!");
 			lose ();
+		}
+		if (play) {
+			fadeout ();
 		}
 	}
 
-	void loadLevel(){
+	void loadLevel(int lvl){
 		
 		maps = Camera.main.GetComponent<Maps> ();
-		string slvl = maps.loadLevel ();
+		string slvl = maps.loadLevel (lvl);
 		level = slvl.ToCharArray();
 	}
 
@@ -98,6 +113,7 @@ public class WorldManager : MonoBehaviour {
 				if (Grid [i, j].getObject () == "wall") {
 					goGrid [i, j].GetComponent<SpriteRenderer> ().sprite = wall;
 				}
+				goGrid [i, j].transform.SetParent (objects.transform);
 			}
 		}
 	}
@@ -110,6 +126,7 @@ public class WorldManager : MonoBehaviour {
 				if (level [idx] == 'P') {
 					player = (GameObject)Instantiate (playerPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
 					player.GetComponent<Player>().init (Grid[i,j]);
+					player.transform.SetParent (objects.transform);
 					return;
 				}
 			}
@@ -126,6 +143,7 @@ public class WorldManager : MonoBehaviour {
 					mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -3), Quaternion.identity);
 					mirror.GetComponent<Mirror> ().init (Grid [i, j]);
 					Grid [i, j].changeObject ("mirror", mirror);
+					mirror.transform.SetParent (objects.transform);
 				}
 			}
 		}
@@ -145,6 +163,7 @@ public class WorldManager : MonoBehaviour {
 					goalRed.transform.position = pos;
 
 					Grid [i, j].changeObject ("goal", goalRed);
+					goalRed.transform.SetParent (objects.transform);
 				}
 				//generator        //up                  //right              //down              //left
 				if (level [idx] == '1' || level [idx] == '2' || level [idx] == '3' || level [idx] == '4' ) {
@@ -166,6 +185,7 @@ public class WorldManager : MonoBehaviour {
 					} else if(level[idx]=='4'){
 						genRed.GetComponent<Generator>().init(Grid[i,j],"left");
 					}
+					genRed.transform.SetParent (objects.transform);
 				}
 			}
 		}
@@ -214,13 +234,127 @@ public class WorldManager : MonoBehaviour {
 		laserManager.redrawLasers ();
 	}
 
+	void setupFade(){
+		fadeScreen =GameObject.FindGameObjectWithTag("blackScreen").GetComponent<SpriteRenderer>();
+		Color tmp = fadeScreen.color;
+		tmp.a = 1;
+		fadeScreen.color = tmp;
+	}
+
+
 	void win(){
+		player.GetComponent<Player> ().DisableControls = true;
+		player.GetComponent<Player> ().DisableCheck = true;
+		goal = 0;
+		fadein (1);
 
 	}
 
 	void lose(){
+		player.GetComponent<Player> ().DisableControls = true;
+		player.GetComponent<Player> ().DisableCheck = true;
+		dead = 0;
+		fadein (0);
+		//display gameover screen
+	}
+
+	void fadeout(){
+		StartCoroutine (fadeMe (-1,-1));
+	}
+
+	void fadein(int win){
+		StartCoroutine (fadeMe (1,win));
+	}
+
+	IEnumerator fadeMe(int direction, int win){
+		Color tmp = fadeScreen.color;
+		float alpha;
+		bool go = true;
+		int maxVal;
+		if(direction==-1){
+			maxVal=0;
+			alpha = 1f; 
+		} else {
+			maxVal=1;
+			alpha = 0f;
+		}
+
+		while(go){
+
+			alpha += direction*Time.deltaTime*2;
+			tmp.a = alpha;
+			fadeScreen.color = tmp;
+			//Debug.Log (alpha+" "+direction+" "+Time.deltaTime);
+			if(direction==-1){
+				if (alpha < 0)
+					go = false;
+			} else {
+				//Debug.Log (alpha);
+				if (alpha > 1)
+					go = false;
+			}
+			yield return null;
+		}
+
+		//activate player
+		if (direction == -1) {
+			player.GetComponent<Player> ().DisableControls = false;
+		} else {
+			player.GetComponent<Player> ().DisableControls = true;
+		}
+
+		yield return new WaitForSeconds (0.25f);
+
+		if (direction == 1) {
+			if (win == 1 && lives > 0) {
+				Color darkGreen = new Color(16/255f,101/255f,16/255f,1f);
+				textCanvas.GetComponent<Text> ().color = darkGreen;
+				textCanvas.GetComponent<Text>().text = "Power Restored\nMoving to Next Section";
+				levelCounter += 1;
+				resetLevel (levelCounter);
+				yield return new WaitForSeconds (2f);
+				//remove lose screen
+				textCanvas.GetComponent<Text>().text = "";
+				fadeout ();
+			}
+			if (win == 0 && lives > 0) {
+				//display lose screen
+				Color darkRed = new Color (101 / 255f, 16 / 255f, 16 / 255f, 1f);
+				textCanvas.GetComponent<Text> ().color = darkRed;
+				textCanvas.GetComponent<Text> ().text = "Watch Out for the Lasers!\nRemaining Lives: " + lives;
+					//display lose screen;
+				resetLevel (levelCounter);
+				yield return new WaitForSeconds (2f);
+				//remove lose screen
+				textCanvas.GetComponent<Text> ().text = "";
+				fadeout ();
+
+			} else if( lives == 0){
+				//display lose screen
+				Color darkRed = new Color (101 / 255f, 16 / 255f, 16 / 255f, 1f);
+				textCanvas.GetComponent<Text> ().color = darkRed;
+				textCanvas.GetComponent<Text> ().text = "Game Over";
+				resetLevel (levelCounter);
+				yield return new WaitForSeconds (2f);
+				//remove lose screen
+				textCanvas.GetComponent<Text> ().text = "";
+				//fadeout ();
+				reset ();
+
+			}
+		}
 
 	}
+
+	public void reset(){
+		lives = 3;
+		goal = 0;
+		dead = 0;
+		levelCounter = 1;
+		menu.SetActive(true);
+		resetLevel (levelCounter);
+	}
+		
 
 	public void resetLasers(){
 		for (int i = 0; i < mapSize; i++) {
@@ -228,6 +362,50 @@ public class WorldManager : MonoBehaviour {
 				Grid [i, j].Laser = 0;
 			}
 		}
+	}
+
+	void resetLevel(int lvl){
+		destroyAll ();
+		goal=0;
+		loadLevel (lvl);
+		defineGrid ();
+		displayBoard ();
+		displayOther ();
+		displayPlayer ();
+		displayMirrors ();
+		laserManager.redrawLasers ();
+
+	}
+
+	void destroyAll(){
+		//resetLasers ();
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				Grid [i, j] = null;
+			}
+		}
+
+		laserManager.destroyLasers ();
+
+		int childCount = objects.transform.childCount;
+		for (int i = 0; i < childCount; i++) {
+			GameObject.Destroy(objects.transform.GetChild(i).gameObject);
+		}
+
+
+
+
+	}
+
+	public void clickPlay(){
+		fadeout ();
+		menu.SetActive (false);
+
+
+	}
+
+	public void returnToMenu(){
+		
 	}
 
 	public GameObject GenRed {
@@ -254,6 +432,15 @@ public class WorldManager : MonoBehaviour {
 		}
 		set {
 			dead = value;
+		}
+	}
+
+	public int Lives {
+		get {
+			return lives;
+		}
+		set {
+			lives = value;
 		}
 	}
 }
