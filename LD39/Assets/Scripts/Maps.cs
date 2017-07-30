@@ -12,7 +12,7 @@ public class Maps : MonoBehaviour {
 					       "W........W" +
 					       "WWW......W" +
 					       "WWW......W" +
-					       "G.....M..W" +
+					       "7.....M..W" +
 					       "WWWWW....W" +
 					       "WW..P....W" +
 					       "WWWWWWWWWW";
@@ -25,7 +25,7 @@ public class Maps : MonoBehaviour {
 							"WMW......W" +
 							"W.W......W" +
 							"W....M...W" +
-							"WGWWW....W" +
+							"W6WWW....W" +
 							"W2.......W" +
 							"WWWWWWWWWW";
 	// Use this for initialization

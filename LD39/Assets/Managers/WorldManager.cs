@@ -97,7 +97,7 @@ public class WorldManager : MonoBehaviour {
 				Grid[i,j] = new Tile(i,j);
 				//add wall boundry
 				idx = j+i*mapSize;
-				if (level [idx] == 'W' || level [idx] == 'G') {
+				if (level [idx] == 'W' ){
 					Grid [i, j].changeObject ("wall", null);
 				} else {
 					Grid [i, j].changeObject ("none", null);
@@ -112,6 +112,8 @@ public class WorldManager : MonoBehaviour {
 				goGrid [i, j] = (GameObject)Instantiate (floorPrefab, new Vector3 (i,j,0), Quaternion.identity);
 				if (Grid [i, j].getObject () == "wall") {
 					goGrid [i, j].GetComponent<SpriteRenderer> ().sprite = wall;
+					Vector3 temp = new Vector3 (i, j, -4);
+					goGrid [i, j].transform.position = temp;
 				}
 				goGrid [i, j].transform.SetParent (objects.transform);
 			}
@@ -140,7 +142,7 @@ public class WorldManager : MonoBehaviour {
 			for (int j = 0; j < mapSize; j++) {
 				idx = j + i * mapSize;
 				if (level [idx] == 'M') {
-					mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -3), Quaternion.identity);
+					mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -5), Quaternion.identity);
 					mirror.GetComponent<Mirror> ().init (Grid [i, j]);
 					Grid [i, j].changeObject ("mirror", mirror);
 					mirror.transform.SetParent (objects.transform);
@@ -154,7 +156,7 @@ public class WorldManager : MonoBehaviour {
 		for (int i = 0; i < mapSize; i++) {
 			for (int j = 0; j < mapSize; j++) {
 				idx = j + i * mapSize;
-				if (level [idx] == 'G') {
+				if (level [idx] == '5'||level [idx] == '6'||level [idx] == '7'||level [idx] == '8') {
 					goalRed = (GameObject)Instantiate (goalRedPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
 					//mirror.GetComponent<Mirror> ().init (Grid [i, j]);
 					Vector3 pos = new Vector3(0,0,-1);
@@ -164,10 +166,19 @@ public class WorldManager : MonoBehaviour {
 
 					Grid [i, j].changeObject ("goal", goalRed);
 					goalRed.transform.SetParent (objects.transform);
+					if(level[idx]=='6'){ //up
+						goalRed.transform.Rotate(new Vector3(0,0,90));
+					} else if(level[idx]=='7'){//right
+						goalRed.transform.Rotate(new Vector3(0,0,0));
+					} else if(level[idx]=='8'){//down
+						goalRed.transform.Rotate(new Vector3(0,0,-90));
+					} else if(level[idx]=='9'){//left
+						goalRed.transform.Rotate(new Vector3(0,0,180));
+					}
 				}
 				//generator        //up                  //right              //down              //left
 				if (level [idx] == '1' || level [idx] == '2' || level [idx] == '3' || level [idx] == '4' ) {
-					genRed = (GameObject)Instantiate (genRedPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
+					genRed = (GameObject)Instantiate (genRedPrefab, new Vector3 (0, 0, -5), Quaternion.identity);
 					//mirror.GetComponent<Mirror> ().init (Grid [i, j]);
 					Vector3 pos = new Vector3(0,0,-1);
 					pos.x = Grid [i, j].Xpos;

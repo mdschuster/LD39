@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
 	//i'd rather not have this here, but it works for now
 	//FIXME
 	Tile newTile;
-	float inputCooldown = 0.1f;
+	float inputCooldown = 0.2f;
 	float time=-1;
 
 	WorldManager manager;
@@ -65,23 +65,35 @@ public class Player : MonoBehaviour {
 
 		if (Input.GetKey (KeyCode.W)) {
 
+			Quaternion tmp = new Quaternion();
+			tmp.eulerAngles = new Vector3 (0, 0, 90);
 			newTile = manager.getNeighbor (myTile, "up");
 			direction = "up";
+			gameObject.transform.rotation = tmp;
 
 		} else if (Input.GetKey (KeyCode.S)) {
-
+			Quaternion tmp = new Quaternion();
+			tmp.eulerAngles = new Vector3 (0, 0, -90);
 			newTile = manager.getNeighbor (myTile, "down");
 			direction = "down";
+			gameObject.transform.rotation = tmp;
+
 
 		} else if (Input.GetKey (KeyCode.A)) {
-
+			Quaternion tmp = new Quaternion();
+			tmp.eulerAngles = new Vector3 (0, 0, 180);
 			newTile = manager.getNeighbor (myTile, "left");
 			direction = "left";
+			gameObject.transform.rotation = tmp;
+
 
 		} else if (Input.GetKey (KeyCode.D)) {
-
+			Quaternion tmp = new Quaternion();
+			tmp.eulerAngles = new Vector3 (0, 0, 0);
 			newTile = manager.getNeighbor (myTile, "right");
 			direction = "right";
+			gameObject.transform.rotation = tmp;
+
 
 		} else {
 			newTile = null;
@@ -98,7 +110,7 @@ public class Player : MonoBehaviour {
 	void movePlayer(string direction){
 
 		//check what is in the tile
-
+		gameObject.GetComponent<Animator> ().SetTrigger("walk");
 		string obj = newTile.getObject ();
 		if (obj == "wall" || obj == "goal" || obj == "generator") {
 			return;
@@ -132,13 +144,14 @@ public class Player : MonoBehaviour {
 	IEnumerator moveMe(Vector3 origPos, Vector3 newPos){
 
 		float elapsedTime = 0;
-		float time = 0.12f;
+		float time = 0.3f;
+
 		while (elapsedTime < time) {
 			transform.position = Vector3.Lerp (origPos, newPos, elapsedTime / time);
 			elapsedTime += Time.deltaTime;
 			yield return null;
 		}
-
+		gameObject.GetComponent<Animator> ().SetTrigger ("stopwalking");
 		transform.position = newPos;
 	}
 
@@ -180,6 +193,7 @@ public class Player : MonoBehaviour {
 		if (myTile.Laser == 1) {
 			manager.Dead = 1;
 			manager.Lives -= 1;
+			gameObject.GetComponent<ParticleSystem> ().Play ();
 		}
 	}
 

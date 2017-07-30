@@ -61,7 +61,7 @@ public class Mirror : MonoBehaviour {
 	IEnumerator moveMe(Vector3 origPos, Vector3 newPos){
 
 		float elapsedTime = 0;
-		float time = 0.12f;
+		float time = 0.3f;
 		while (elapsedTime < time) {
 			transform.position = Vector3.Lerp (origPos, newPos, elapsedTime / time);
 			elapsedTime += Time.deltaTime;
