@@ -6,6 +6,7 @@ public class LaserManager : MonoBehaviour {
 
 	WorldManager manager;
 	public GameObject laserPrefab;
+	int goal = 0;
 	int generators;
 	int gX;
 	int gY;
@@ -28,6 +29,8 @@ public class LaserManager : MonoBehaviour {
 
 	public void redrawLasers(){
 		destroyLasers ();
+		resetLasers ();
+		goal = 0;
 		bool stopped = false;
 		int iter=0;
 		Tile curTile = genTile;
@@ -37,13 +40,20 @@ public class LaserManager : MonoBehaviour {
 		for (int i = 0; i < generators; i++) {
 			while (!stopped) {
 
-				laser = (GameObject)Instantiate (laserPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
+				laser = (GameObject)Instantiate (laserPrefab, new Vector3 (0, 0, -2), Quaternion.identity);
 				laser.GetComponent<Laser>().init (curTile,laserFace);
 				laser.transform.SetParent (gameObject.transform);
+				curTile.Laser = 1;
 				nextTile = manager.getNeighbor (curTile, laserFace);
 				//Debug.Log(nextTile.getObject ());
 				//Debug.Log (nextTile.Xpos + " " + nextTile.Ypos);
-				if (nextTile.getObject() == "wall" || nextTile.getObject() == "goal" || nextTile.getObject() == "generator") {
+				if (nextTile.getObject () == "wall" || nextTile.getObject () == "goal" || nextTile.getObject () == "generator") {
+					if (nextTile.getObject () == "goal") {
+						goal = 1;
+					} else {
+						goal = 0;
+					}
+					manager.Goal = goal;
 					break;
 				}
 				if (nextTile.getObject () == "mirror") {
@@ -81,6 +91,10 @@ public class LaserManager : MonoBehaviour {
 				curTile = nextTile;
 			}
 		}
+	}
+
+	public void resetLasers(){
+		manager.resetLasers ();
 	}
 
 	void destroyLasers(){

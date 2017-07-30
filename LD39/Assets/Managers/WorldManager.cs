@@ -23,11 +23,14 @@ public class WorldManager : MonoBehaviour {
 	Maps maps;
 	public LaserManager laserManager;
 	char[] level;
+	int goal = 0;
+	int dead = 0;
 
 	// Use this for initialization
 	void Start () {
 		
 		//First thing to do is create grid
+		goal=0;
 		loadLevel ();
 		defineGrid ();
 		displayBoard ();
@@ -44,6 +47,14 @@ public class WorldManager : MonoBehaviour {
 	void Update () {
 		if (Input.GetKey ("escape"))
 			Application.Quit ();
+		if (goal == 1 && dead==0) {
+			Debug.Log ("Winner, Winner, Chicken Dinner!");
+			win ();
+		}
+		if (dead == 1) {
+			Debug.Log ("You Died!");
+			lose ();
+		}
 	}
 
 	void loadLevel(){
@@ -112,7 +123,7 @@ public class WorldManager : MonoBehaviour {
 			for (int j = 0; j < mapSize; j++) {
 				idx = j + i * mapSize;
 				if (level [idx] == 'M') {
-					mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -1), Quaternion.identity);
+					mirror = (GameObject)Instantiate (mirrorPrefab, new Vector3 (0, 0, -3), Quaternion.identity);
 					mirror.GetComponent<Mirror> ().init (Grid [i, j]);
 					Grid [i, j].changeObject ("mirror", mirror);
 				}
@@ -203,12 +214,46 @@ public class WorldManager : MonoBehaviour {
 		laserManager.redrawLasers ();
 	}
 
+	void win(){
+
+	}
+
+	void lose(){
+
+	}
+
+	public void resetLasers(){
+		for (int i = 0; i < mapSize; i++) {
+			for (int j = 0; j < mapSize; j++) {
+				Grid [i, j].Laser = 0;
+			}
+		}
+	}
+
 	public GameObject GenRed {
 		get {
 			return genRed;
 		}
 		set {
 			genRed = value;
+		}
+	}
+
+	public int Goal {
+		get {
+			return goal;
+		}
+		set {
+			goal = value;
+		}
+	}
+
+	public int Dead {
+		get {
+			return dead;
+		}
+		set {
+			dead = value;
 		}
 	}
 }

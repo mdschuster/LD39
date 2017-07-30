@@ -9,6 +9,7 @@ public class Tile{
 
 	string theObject = "none";
 	GameObject goObject;
+	int laser = 0;
 
 	public Tile(int x, int y){
 		this.xpos = x;
@@ -48,6 +49,15 @@ public class Tile{
 		}
 		set {
 			ypos = value;
+		}
+	}
+
+	public int Laser {
+		get {
+			return laser;
+		}
+		set {
+			laser = value;
 		}
 	}
 }

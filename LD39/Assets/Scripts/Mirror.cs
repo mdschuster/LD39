@@ -42,7 +42,7 @@ public class Mirror : MonoBehaviour {
 		if (neighbor.getObject() != "none") {
 			return 0;
 		}
-
+		manager.resetLasers ();
 		myTile.changeObject ("none",null);
 		neighbor.changeObject("mirror",gameObject);
 		Vector3 origPos = transform.position;

@@ -27,6 +27,8 @@ public class Player : MonoBehaviour {
 
 		move ();
 		rotateMirror ();
+		//this is ok for now, but i don't like it
+		checkLaser ();
 	}
 
 	public void init(Tile startTile){
@@ -113,6 +115,7 @@ public class Player : MonoBehaviour {
 
 
 		StartCoroutine(moveMe(origPos, newPos));
+		checkLaser ();
 
 	}
 
@@ -147,6 +150,7 @@ public class Player : MonoBehaviour {
 					facingTile.getGO ().GetComponent<Mirror> ().rotate ();
 				}
 			}
+			checkLaser ();
 
 		}
 	}
@@ -160,5 +164,12 @@ public class Player : MonoBehaviour {
 		newTile = myTile;
 	}
 
+	void checkLaser(){
+		if (myTile == null)
+			return;
+		if (myTile.Laser == 1) {
+			manager.Dead = 1;
+		}
+	}
 
 }
