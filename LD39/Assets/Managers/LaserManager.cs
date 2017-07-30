@@ -53,6 +53,7 @@ public class LaserManager : MonoBehaviour {
 					} else {
 						goal = 0;
 					}
+					manager.player.GetComponent<Player> ().checkLaser ();
 					manager.Goal = goal;
 					break;
 				}

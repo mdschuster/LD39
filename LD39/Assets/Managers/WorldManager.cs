@@ -17,7 +17,7 @@ public class WorldManager : MonoBehaviour {
 
 	public Sprite wall;
 
-	GameObject player;
+	public GameObject player;
 	GameObject mirror;
 	GameObject goalRed;
 	GameObject genRed;
@@ -56,15 +56,23 @@ public class WorldManager : MonoBehaviour {
 		//fadeout ();
 
 	}
+
+	public void exitClick(){
+		Application.Quit ();
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKey ("escape"))
 			Application.Quit ();
 		if (goal == 1 && dead==0) {
+			goal = 0;
+			dead = 0;
 			win ();
 		}
 		if (dead == 1) {
+			goal = 0;
+			dead = 0;
 			lose ();
 		}
 		if (play) {

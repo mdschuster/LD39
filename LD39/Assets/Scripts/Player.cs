@@ -144,7 +144,7 @@ public class Player : MonoBehaviour {
 	IEnumerator moveMe(Vector3 origPos, Vector3 newPos){
 
 		float elapsedTime = 0;
-		float time = 0.3f;
+		float time = 0.2f;
 
 		while (elapsedTime < time) {
 			transform.position = Vector3.Lerp (origPos, newPos, elapsedTime / time);
@@ -187,13 +187,15 @@ public class Player : MonoBehaviour {
 		newTile = myTile;
 	}
 
-	void checkLaser(){
+	public void checkLaser(){
 		if (myTile == null)
 			return;
 		if (myTile.Laser == 1) {
 			manager.Dead = 1;
 			manager.Lives -= 1;
 			gameObject.GetComponent<ParticleSystem> ().Play ();
+			Debug.Log (gameObject.GetComponent<AudioSource> ().clip);
+			gameObject.GetComponent<AudioSource> ().Play();
 		}
 	}
 
