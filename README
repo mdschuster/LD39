@@ -6,12 +6,13 @@ Theme: Running out of power
 Engine: Unity 5.6
 Audio SFX: Audacity
 Audio Music: audiotool.com
+Sprite Art: Affinity Photo
 
 Game: Operation Lambda
 
-Your power systems are out of alighment, you must realign them before it's too late!
-Use the mirros to align the laser power to the input port.
-WASD moves and pushes mirros
+Your power systems are out of alignment, you must realign them before it's too late!
+Use the mirrors to align the laser power to the input port.
+WASD moves and pushes mirrors
 R rotates the mirrors
 ESC resets the level
 
