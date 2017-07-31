@@ -33,6 +33,8 @@ public class WorldManager : MonoBehaviour {
 	int lives=3;
 	int levelCounter = 1;
 	bool play=false;
+	int finish=0;
+	int restartLevel;
 
 	// Use this for initialization
 	void Start () {
@@ -42,7 +44,7 @@ public class WorldManager : MonoBehaviour {
 		objects = GameObject.FindGameObjectWithTag ("objects");
 		textCanvas = GameObject.FindGameObjectWithTag ("textCanvas");
 		menu = GameObject.FindGameObjectWithTag ("mainMenu");
-		loadLevel (1);
+		loadLevel (levelCounter);
 		defineGrid ();
 		displayBoard ();
 		displayOther ();
@@ -64,15 +66,20 @@ public class WorldManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKey ("escape"))
-			Application.Quit ();
+			dead = 1;
 		if (goal == 1 && dead==0) {
 			goal = 0;
 			dead = 0;
+			if (levelCounter == 5)
+				finish = 1;
 			win ();
 		}
 		if (dead == 1) {
 			goal = 0;
 			dead = 0;
+			lose ();
+		}
+		if (restartLevel == 1) {
 			lose ();
 		}
 		if (play) {
@@ -174,13 +181,13 @@ public class WorldManager : MonoBehaviour {
 
 					Grid [i, j].changeObject ("goal", goalRed);
 					goalRed.transform.SetParent (objects.transform);
-					if(level[idx]=='6'){ //up
+					if(level[idx]=='5'){ //up
 						goalRed.transform.Rotate(new Vector3(0,0,90));
-					} else if(level[idx]=='7'){//right
+					} else if(level[idx]=='6'){//right
 						goalRed.transform.Rotate(new Vector3(0,0,0));
-					} else if(level[idx]=='8'){//down
+					} else if(level[idx]=='7'){//down
 						goalRed.transform.Rotate(new Vector3(0,0,-90));
-					} else if(level[idx]=='9'){//left
+					} else if(level[idx]=='8'){//left
 						goalRed.transform.Rotate(new Vector3(0,0,180));
 					}
 				}
@@ -325,7 +332,8 @@ public class WorldManager : MonoBehaviour {
 		yield return new WaitForSeconds (0.25f);
 
 		if (direction == 1) {
-			if (win == 1 && lives > 0) {
+
+			if (win == 1 && lives > 0 && finish==0) {
 				Color darkGreen = new Color(16/255f,101/255f,16/255f,1f);
 				textCanvas.GetComponent<Text> ().color = darkGreen;
 				textCanvas.GetComponent<Text>().text = "Power Restored\nMoving to Next Section";
@@ -361,7 +369,20 @@ public class WorldManager : MonoBehaviour {
 				reset ();
 
 			}
+
+			if (finish==1) {
+				Color darkGreen = new Color(16/255f,101/255f,16/255f,1f);
+				textCanvas.GetComponent<Text> ().color = darkGreen;
+				textCanvas.GetComponent<Text>().text = "Power Restored To All Levels\nYou WIN!";
+				levelCounter = 1;
+				yield return new WaitForSeconds (2f);
+				//remove lose screen
+				textCanvas.GetComponent<Text>().text = "";
+				reset ();
+			}
+
 		}
+		restartLevel = 0;
 
 	}
 

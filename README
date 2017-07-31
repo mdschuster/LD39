@@ -1,6 +1,18 @@
 Ludum Dare 39 repository
 Author: Micah Schuster
 
-Theme: Unknown
+Theme: Running out of power
 
 Engine: Unity 5.6
+Audio SFX: Audacity
+Audio Music: audiotool.com
+
+Game: Operation Lambda
+
+Your power systems are out of alighment, you must realign them before it's too late!
+Use the mirros to align the laser power to the input port.
+WASD moves and pushes mirros
+R rotates the mirrors
+ESC resets the level
+
+

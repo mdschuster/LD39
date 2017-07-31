@@ -86,9 +86,9 @@ public class LaserManager : MonoBehaviour {
 				}
 
 				//Debug.Log (laserFace);
-				iter += 1;
-				if (iter == 20)
-					break;
+				//iter += 1;
+				//if (iter == 20)
+				//	break;
 				curTile = nextTile;
 			}
 		}

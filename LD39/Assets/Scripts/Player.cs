@@ -194,7 +194,6 @@ public class Player : MonoBehaviour {
 			manager.Dead = 1;
 			manager.Lives -= 1;
 			gameObject.GetComponent<ParticleSystem> ().Play ();
-			Debug.Log (gameObject.GetComponent<AudioSource> ().clip);
 			gameObject.GetComponent<AudioSource> ().Play();
 		}
 	}
